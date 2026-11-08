@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lh-cevio-mcp"
+version = "0.1.0"
+description = "In-process MCP bridge into CeVIO AI's song engine, and the client that drives it"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "LH AI Studio" }]
+
+# The client is deliberately dependency-free at import time: the injection path
+# (lhai/live/inject.py, win32.py) is ctypes only, and the MCP transport is the
+# one optional extra below.  This is what keeps the bridge usable on a machine
+# that has CeVIO and nothing else.
+dependencies = []
+
+[project.optional-dependencies]
+# The MCP server itself, plus the COM/UIA glue.  Route A (injection) and
+# `python -m lhai.mcp` need exactly this.
+mcp = [
+    "mcp>=2",
+    "comtypes>=1.4",
+]
+# Only the named-pipe agent channel in lhai/live/agent.py needs pywin32; the
+# CeVIO route does not import it.
+agent = [
+    "pywin32>=306",
+]
+
+[project.scripts]
+lhai-mcp = "lhai.mcp.server:main"
+
+[tool.setuptools.packages.find]
+include = ["lhai*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"

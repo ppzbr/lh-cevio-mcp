@@ -1,0 +1,24 @@
+# ---- python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ---- what a run writes beside the bridge ----
+# boot logs, the live status snapshot, and the loader's target hint are all
+# produced by running the thing and must never be committed.
+bridges/cevio/LhCeVioBridge.boot.txt
+bridges/cevio/LhCeVioBridge.status.json
+bridges/cevio/native/LhCeVioLoader.boot.txt
+bridges/cevio/native/LhCeVioLoader.target.txt
+
+# ---- what build.ps1 leaves behind ----
+bridges/cevio/native/*.lib
+bridges/cevio/native/*.exp
+bridges/cevio/native/*.pdb

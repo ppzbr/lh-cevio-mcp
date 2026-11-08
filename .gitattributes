@@ -1,0 +1,8 @@
+# Every file here is content-hashed by MANIFEST.txt and checked by the test
+# suite, so git must not rewrite line endings: a checkout that turned LF into
+# CRLF would change the bytes and make the manifest disagree with the tree.
+# `-text` disables the conversion for everything; diffs still work normally.
+* -text
+
+# The shipped binaries are binary in every sense.
+*.dll binary
