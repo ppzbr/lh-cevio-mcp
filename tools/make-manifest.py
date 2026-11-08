@@ -15,12 +15,26 @@ from __future__ import annotations
 
 import hashlib
 import sys
+from fnmatch import fnmatchcase
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 MANIFEST = "MANIFEST.txt"
 
-SKIP_DIRS = {".git", "__pycache__", ".pytest_cache", ".venv", "venv", "build", ".mypy_cache", ".ruff_cache"}
+# `bin` and `obj` are .NET build output: they never appear in the Python
+# repositories, and listing them here keeps this file identical in all of them.
+SKIP_DIRS = {
+    ".git",
+    "__pycache__",
+    ".pytest_cache",
+    ".venv",
+    "venv",
+    "build",
+    "bin",
+    "obj",
+    ".mypy_cache",
+    ".ruff_cache",
+}
 # `pip install -e .` (Step 0 of prompt.md) writes an egg-info directory into the
 # project root.  It is build output, not part of the repository, and it must not
 # make the manifest look incomplete.
@@ -28,14 +42,30 @@ SKIP_ENDINGS = (".egg-info", ".dist-info")
 SKIP_SUFFIXES = (".pyc", ".pyo", ".lib", ".exp", ".pdb")
 SKIP_NAMES = {
     MANIFEST,
+    # Diagnostics a run drops beside the binaries.  The list is the union for the
+    # whole bridge family on purpose, so this file stays identical everywhere and
+    # a name that never occurs here costs nothing.
     "LhCeVioBridge.boot.txt",
     "LhCeVioBridge.status.json",
     "LhCeVioLoader.boot.txt",
     "LhCeVioLoader.target.txt",
+    "lhai_bridge.boot.txt",
+    "lhai_bridge.status.json",
 }
 
+# Patterns this repository's own .gitignore excludes and the manifest must too: the
+# hand-built helper executables (their sources are committed, the exes are not), and
+# the copies a repackage parks while an editor holds a file open.  In fnmatch `*`
+# crosses `/`, which is what makes these readable as one-liners.
+SKIP_GLOBS = (
+    "*/load_host_*.exe",
+    "*/hotkey_host.exe",
+    "*/vocalpatch.ini",
+    "*.locked-*",
+)
+
 HEADER = (
-    "# lh-cevio-mcp - sha256 of every file in this repository\n"
+    "# sha256 of every file in this repository\n"
     "# MANIFEST.txt itself is not listed.  Regenerate with:\n"
     "#   python tools/make-manifest.py\n"
     "# Verify by hand with:\n"
@@ -52,6 +82,8 @@ def files() -> list[Path]:
         if any(part in SKIP_DIRS or part.endswith(SKIP_ENDINGS) for part in rel.parts):
             continue
         if path.name.endswith(SKIP_SUFFIXES) or path.name in SKIP_NAMES:
+            continue
+        if any(fnmatchcase(rel.as_posix(), pattern) for pattern in SKIP_GLOBS):
             continue
         out.append(rel)
     return out

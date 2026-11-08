@@ -1,4 +1,4 @@
-# lh-cevio-mcp - sha256 of every file in this repository
+# sha256 of every file in this repository
 # MANIFEST.txt itself is not listed.  Regenerate with:
 #   python tools/make-manifest.py
 # Verify by hand with:
@@ -47,5 +47,5 @@ aabfeccab538744b10d79e798db4d41b66019e7837a8455781f358209260118a  lhai/mcp/serve
 f3289dce4177d6c255038352420b569f90191082102f15ba33eb4e9146f9f1b9  pyproject.toml
 53c46f1dcbe15e257854679e19bd441675c2460fb9e11911e67b0df85adec3dd  tests/test_live.py
 dd97e71509db03674961a8d52b87e66789ca7875e230a816013f188e319fb480  tests/test_mcp_singing.py
-cbc78cb653a6e0acc60449f5280c3cfe034a7ae82a64cd1ac55e5ae6d0c0c005  tests/test_repo.py
-34880714e81c34db4c081ead8362555077c0d2cd34aa487577569e70e8f8cec6  tools/make-manifest.py
+42ec6c289f4ccdd12a12a84234044d89a7e63c9f90a72461d8ae20bfa39662e5  tests/test_repo.py
+79ed51c18a4100d04ac4cef90dd08b5ea85dd93acab5196202b844c7cbff2cb1  tools/make-manifest.py
